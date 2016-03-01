@@ -1,3 +1,5 @@
+util.AddNetworkString("mu_death")
+
 local PlayerMeta = FindMetaTable("Player")
 local EntityMeta = FindMetaTable("Entity")
 
@@ -286,7 +288,6 @@ function GM:PlayerDeath(ply, Inflictor, attacker )
 
 		if IsValid(attacker) && attacker:IsPlayer() then
 			if attacker:GetMurderer() then
-				-- self:SendMessageAll("The murderer has struck again")
 				if self.RemoveDisguiseOnKill:GetBool() then
 					attacker:UnMurdererDisguise()
 				end
@@ -302,8 +303,6 @@ function GM:PlayerDeath(ply, Inflictor, attacker )
 				end
 				attacker:SetTKer(true)
 			end
-		else
-			-- self:SendMessageAll("An bystander died in mysterious circumstances")
 		end
 	else
 		if attacker != ply && IsValid(attacker) && attacker:IsPlayer() then
@@ -325,19 +324,9 @@ function GM:PlayerDeath(ply, Inflictor, attacker )
 	ply.DeathTime = CurTime()
 	ply.SpectateTime = CurTime() + 4
 
-	umsg.Start("rp_death", ply)
-	umsg.Long(5)
-	umsg.Long(4)
-	umsg.End()
-	
-	if ( Inflictor && Inflictor == attacker && (Inflictor:IsPlayer() || Inflictor:IsNPC()) ) then
-	
-		Inflictor = Inflictor:GetActiveWeapon()
-		if ( !Inflictor || Inflictor == NULL ) then Inflictor = attacker end
-	
-	end
-
-	self:RagdollSetDeathDetails(ply, Inflictor, attacker)
+	net.Start("mu_death")
+	net.WriteUInt(4, 4)
+	net.Send(ply)
 end
 
 function GM:PlayerDeathThink(ply)
