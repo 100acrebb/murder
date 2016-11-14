@@ -169,7 +169,6 @@ function SWEP:AttackTrace()
 	local tr = util.TraceHull(trace)
 	tr.TraceAimVector = self.Owner:GetAimVector()
 
-	print(CurTime(), trace.start, trace.endpos)
 	// aim around
 	if !IsValid(tr.Entity) then tr = self:GetTrace() end
 	if !IsValid(tr.Entity) then tr = self:GetTrace(10,0) end
@@ -178,9 +177,6 @@ function SWEP:AttackTrace()
 	if !IsValid(tr.Entity) then tr = self:GetTrace(0,-10) end
 	
 	if tr.Hit then
-		DebugInfo(1, "" .. CurTime())
-		print(2, CurTime())
-		-- self.Owner:ViewPunch(Angle(-7, 0, 0))
 		if IsValid(tr.Entity) then
 			if CLIENT && LocalPlayer() == self.Owner then
 				self:EmitSound("Weapon_Crowbar.Melee_Hit")
